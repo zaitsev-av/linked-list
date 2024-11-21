@@ -7,69 +7,42 @@ type Node struct {
 	Next  *Node
 }
 
-func NewNode(value any) *Node {
-	return &Node{value, nil}
+func (n *Node) newNode(value any) *Node {
+	return &Node{Value: value, Next: nil}
 }
 
-func (n *Node) PushLinkedList(val any) {
-	if n.Next == nil {
-		n.Next = NewNode(val)
-		return
-	}
-	for {
-		if n.Next == nil {
-			n.Next = NewNode(val)
-			return
-		} else {
-			n = n.Next
-		}
-	}
+type LinkedList struct {
+	current *Node
 }
 
-func (n *Node) Iterator() {
-	for {
-		if n.Next == nil {
-			fmt.Println("Дошли до конца связного списка")
-			return
-		} else {
-			fmt.Println("Получили:", n.Value)
-			if n.Next.Next == nil {
-				fmt.Println("Получили:", n.Next.Value)
-			}
-			n = n.Next
-		}
+func (ll *LinkedList) Next() any {
+	if ll.current == nil {
+		fmt.Println("next is nil")
+		return nil
 	}
+	value := ll.current.Value
+	ll.current = ll.current.Next
+	return value
 }
 
-func (n *Node) Rec() {
-	if n.Next == nil {
-		return
+func (ll *LinkedList) Push(value any) {
+	if ll.current.Next == nil {
+		ll.current.Next = ll.current.newNode(value)
 	}
-	fmt.Println("Value", n.Value)
-	if n.Next.Next == nil {
-		fmt.Println("Value", n.Next.Value)
-	}
-	n.Next.Rec()
+
 }
 
-//func (n *Node) PopLinkedList() *Node {}
-
-func (n *Node) Print() {
-	for {
-		if n == nil {
-			return
-		}
-		fmt.Println(n.Value)
-		n = n.Next
-	}
+func (ll *LinkedList) HasNext() bool {
+	return ll.current != nil
 }
-func LinkedList() {
-	myList := NewNode(1)
-	myList.PushLinkedList(2)
-	myList.PushLinkedList(3)
-	myList.PushLinkedList(4)
-	//myList.Print()
-	//myList.Iterator()
-	myList.Rec()
-	//fmt.Println(returnetNode.Value)
+
+func List() {
+	//create LL
+	myList := LinkedList{&Node{1, &Node{2, &Node{3, nil}}}}
+	for myList.HasNext() {
+
+		fmt.Println("Element:", myList.current.Value)
+		myList.Next()
+	}
+
 }
